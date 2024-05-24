@@ -1,37 +1,53 @@
-import { SearchBox } from '../../components/search-box.component'
 import { useState, useEffect } from 'react'
-import './home.styles.css'
 import { Link } from 'react-router-dom'
+import { SearchBox } from '../../components/search-box.component'
+import { PodcastCard } from '../../components/podcast-card.component'
+import { getFromLocalStorage, saveToLocalStorage } from '../../hooks/useLocalStorage'
+import './home.styles.css'
 
 const PODCAST_END_POINT = 'https://itunes.apple.com/us/rss/toppodcasts/limit=100/genre=1310/json'
 
 export const Home = () => {
-  const [podcasts, setPodcasts] = useState([])
-  const [filteredPodcasts, setFilteredPodcasts] = useState([])
+  const [podcasts, setPodcasts] = useState(getFromLocalStorage('podcasts'))
+  const [filteredPodcasts, setFilteredPodcasts] = useState(getFromLocalStorage('podcasts'))
 
   useEffect(() => {
-    getPodcasts()
-  }, [])
+    async function getPodcasts () {
+      const recoveredPodcasts = await fetch(PODCAST_END_POINT)
+        .then(res => res.json())
+        .catch(function (error) {
+          console.log('There was a problem with the Fetch request: ' + error.message)
+          return error
+        })
+        .then(data => data.feed.entry)
 
-  async function getPodcasts () {
-    const recoveredPodcasts = await fetch(PODCAST_END_POINT)
-      .then(res => res.json())
-      .catch(function (error) {
-        console.log('There was a problem with the Fetch request: ' + error.message)
-        return error
-      })
-      .then(data => (data.feed.entry))
-
-    if (recoveredPodcasts.length > 0) {
-      setPodcasts(recoveredPodcasts)
-      setFilteredPodcasts(recoveredPodcasts)
+      if (recoveredPodcasts?.length > 0) {
+        saveToLocalStorage('podcasts', recoveredPodcasts)
+        setPodcasts(recoveredPodcasts)
+        setFilteredPodcasts(recoveredPodcasts)
+      }
     }
-  }
+
+    if (!podcasts) {
+      getPodcasts()
+    }
+    const intervalId = setInterval(() => {
+      const storedPodcasts = getFromLocalStorage('podcasts')
+      if (!storedPodcasts) {
+        getPodcasts()
+      }
+    }, 86400000)
+
+    return () => clearInterval(intervalId) // Limpiar el intervalo al desmontar el componente
+  }, [podcasts])
 
   function handleChangeSearch (event) {
     const search = event.target.value.toLowerCase()
     const filter = podcasts.filter((podcast) => {
-      return podcast['im:name'].label.toLowerCase().includes(search)
+      return (
+        podcast['im:name'].label.toLowerCase().includes(search) ||
+        podcast['im:artist'].label.toLowerCase().includes(search)
+      )
     })
     setFilteredPodcasts(filter)
   }
@@ -44,8 +60,7 @@ export const Home = () => {
         </section>
         <section className='podcasts'>
           <ul>
-            {
-            filteredPodcasts.map(podcast => {
+            {filteredPodcasts?.map(podcast => {
               const id = podcast.id.attributes['im:id']
               const name = podcast['im:name'].label
               const img = podcast['im:image'][2].label
@@ -53,21 +68,11 @@ export const Home = () => {
               return (
                 <li key={id}>
                   <Link to={`podcast/${id}`}>
-                    <div className='podcast-container'>
-                      <img
-                        src={img}
-                        alt={name}
-                      />
-                      <div>
-                        <strong>{name}</strong>
-                      </div>
-                      <div>{artist}</div>
-                    </div>
+                    <PodcastCard name={name} img={img} artist={artist} />
                   </Link>
                 </li>
               )
-            })
-         }
+            })}
           </ul>
         </section>
       </main>

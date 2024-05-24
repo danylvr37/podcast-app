@@ -1,8 +1,9 @@
 .header {
   color: white;
-  padding: 20px 0;
+  padding: 10px 0;
   font-family: 'Arial', sans-serif;
-  color: #333;
+  border-bottom: 1px solid #d7d7d7;
+  margin-bottom: 20px;
 }
 
 .navigation {
