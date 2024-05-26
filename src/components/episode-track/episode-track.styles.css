@@ -1,0 +1,18 @@
+.episode-track h1,
+.episode-track p {
+  padding: 0 3%;
+}
+
+.audio-control {
+  padding: 0 3%;
+}
+
+.audio-control audio {
+  padding-top: 1rem;
+  width: 100%;
+  border-top: 1px solid #d7d7d7;
+}
+
+audio::-webkit-media-controls-panel {
+  background-color: lightgrey;
+}

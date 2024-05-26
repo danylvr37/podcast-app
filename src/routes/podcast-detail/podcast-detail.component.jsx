@@ -47,6 +47,6 @@ export const PodcastDetail = () => {
         <section>
           <PodcastList podcastId={podcastId} description={description} episodesNumber={podcast?.trackCount} episodes={episodes} podcast={podcast} />
         </section>
-      </main>
+        </main>
   )
 }

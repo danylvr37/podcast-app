@@ -1,6 +1,7 @@
 .podcast-list-component-container {
   display: flex;
   flex-direction: column;
+  position: relative
 }
 
 .podcasts-episodes-number,

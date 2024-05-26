@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import './podcast-list.styles.css'
+import { BackButton } from '../../components/back-button/back-button.component'
 
 export const PodcastList = ({ podcastId, description, episodesNumber, episodes, podcast }) => {
   const navigate = useNavigate()
@@ -7,11 +8,12 @@ export const PodcastList = ({ podcastId, description, episodesNumber, episodes, 
   const handleRowClick = (episode) => {
     navigate(`/podcast/${podcastId}/episode/${episode.trackId}`, { state: { description, podcast, episode } })
   }
-  console.log(episodes)
+
   return (
     <>
       <div className='podcast-list-component-container'>
         <div className='podcasts-episodes-number'><strong>Episodes: {episodesNumber}</strong></div>
+        <BackButton path='/' /* state={description, podcast, episode} */ />
         <div className='podcasts-episodes'>
           <table>
             <thead>

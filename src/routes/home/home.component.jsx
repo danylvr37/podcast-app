@@ -66,7 +66,7 @@ export const Home = () => {
       ? <div />
       : <main>
         <section className='search-container'>
-          <SearchBox handleChangeSearch={handleChangeSearch} />
+          <SearchBox handleChangeSearch={handleChangeSearch} number={filteredPodcasts.length} />
         </section>
         <section className='podcasts'>
           <ul>
@@ -86,6 +86,6 @@ export const Home = () => {
             })}
           </ul>
         </section>
-      </main>
+        </main>
   )
 }

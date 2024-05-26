@@ -1,0 +1,17 @@
+.back-button {
+  width: fit-content;
+  padding: 0.5rem 1rem;
+  background-color: lightgrey;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  position: absolute;
+  right: 1rem;
+  top: 1rem
+}
+
+.back-button:hover {
+  background-color: grey;
+  color: white
+}
