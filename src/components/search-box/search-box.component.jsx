@@ -1,3 +1,5 @@
+import './search-box.styles.css'
+
 export const SearchBox = ({ handleChangeSearch }) => {
   return (
     <>
