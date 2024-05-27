@@ -21,7 +21,7 @@ La aplicación tendrá únicamente tres vistas:
 
 ## Descripción
 
-Esta aplicacion recoge un listado de 100 podcast de Apple.com de los cuales puedes ver sus detalles y un listado de 20 episodios, los cuales puedes escuchar dentro de ella.
+Esta aplicacion recoge un listado de 100 podcast de Apple.com de los cuales puedes ver sus detalles y un listado de 20 episodios para cada uno, los cuales puedes escuchar dentro de ella.
 
 ## Requisitos
 
@@ -58,3 +58,11 @@ npm run build
 # o si prefieres yarn
 yarn build
 ```
+La aplicación se lanzará en http://localhost:4173/.
+
+## Tags de evolución
+v1.1: Creación del enrutado base y de la página Home con el filtro del podcast por nombre
+v1.1.2: Actualización del buscador por artista, añadiendo cambios visuales y guardando en el almacenamiento local por un día el listado general de podcast
+v1.2: Añadiendo las vistas de detalles del podcast  y del episodio y creando el método de carga de las páginas
+v1.2.1: Organizando la estructura de algunos archivos y desarrollando el método de coincidencias del filtro de búsqueda
+v1.2.3: Añadiendo el almacenamiento local de la información de la página de detalles del podcast
