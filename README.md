@@ -66,3 +66,4 @@ v1.1.2: Actualización del buscador por artista, añadiendo cambios visuales y g
 v1.2: Añadiendo las vistas de detalles del podcast  y del episodio y creando el método de carga de las páginas
 v1.2.1: Organizando la estructura de algunos archivos y desarrollando el método de coincidencias del filtro de búsqueda
 v1.2.3: Añadiendo el almacenamiento local de la información de la página de detalles del podcast
+v1.2.4: Mejorando el almacenamiento local de la información de la página de detalles del podcast
