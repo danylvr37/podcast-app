@@ -3,10 +3,11 @@ import { useState, useEffect } from 'react'
 import { PodcastCard } from '../../components/podcast-card/podcast-card.component'
 import { PodcastList } from '../../components/podcast-list/podcast-list.component'
 import { loadingSubject } from '../../services/loadingSubject'
+import { getFromLocalStorage, saveToLocalStorage } from '../../hooks/useLocalStorage'
 
 export const PodcastDetail = () => {
   const { podcastId } = useParams()
-  const [podcast, setPodcast] = useState([])
+  const [podcast, setPodcast] = useState(getFromLocalStorage(podcastId))
   const [episodes, setEpisodes] = useState([])
   const [loading, setLoading] = useState(false)
   const { state: { description } } = useLocation()
@@ -25,8 +26,12 @@ export const PodcastDetail = () => {
         }
         const data = await response.json()
         const jsonData = JSON.parse(data.contents)
-        setPodcast(jsonData.results[0])
-        setEpisodes(jsonData.results.slice(1))
+
+        if (jsonData?.results?.length > 0) {
+          saveToLocalStorage(podcastId, jsonData.results[0])
+          setPodcast(jsonData.results[0])
+          setEpisodes(jsonData.results.slice(1))
+        }
       } catch (error) {
         console.log('There was a problem with the Fetch request: ' + error.message)
       } finally {
@@ -34,8 +39,22 @@ export const PodcastDetail = () => {
         loadingSubject.next(false)
       }
     }
-    getPodcastUrl()
-  }, [PODCAST_END_POINT, ALL_ORIGIN])
+
+    if (!podcast) {
+      getPodcastUrl()
+    } else {
+      loadingSubject.next(false)
+    }
+
+    const intervalId = setInterval(() => {
+      const storedPodcasts = getFromLocalStorage('podcasts')
+      if (!storedPodcasts) {
+        getPodcastUrl()
+      }
+    }, 86400000)
+
+    return () => clearInterval(intervalId)
+  }, [ALL_ORIGIN, podcast, podcastId])
 
   return (
     loading
@@ -47,6 +66,6 @@ export const PodcastDetail = () => {
         <section>
           <PodcastList podcastId={podcastId} description={description} episodesNumber={podcast?.trackCount} episodes={episodes} podcast={podcast} />
         </section>
-        </main>
+      </main>
   )
 }
