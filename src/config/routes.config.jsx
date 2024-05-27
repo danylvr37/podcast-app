@@ -6,7 +6,7 @@ import { PodcastDetail } from '../routes/podcast-detail/podcast-detail.component
 import { EpisodeDetail } from '../routes/episode-detail/episode-detail.component'
 
 export const AppRouter = () => (
-  <Router>
+  <Router baseName={import.meta.env.BASE_URL}>
     <Routes>
       <Route
         path='/'
