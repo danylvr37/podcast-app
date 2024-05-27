@@ -7,10 +7,17 @@ import { getFromLocalStorage, saveToLocalStorage } from '../../hooks/useLocalSto
 
 export const PodcastDetail = () => {
   const { podcastId } = useParams()
-  const [podcast, setPodcast] = useState(getFromLocalStorage(podcastId))
-  const [episodes, setEpisodes] = useState([])
+  const [podcast, setPodcast] = useState(() => {
+    const storedData = getFromLocalStorage(podcastId)
+    return storedData ? storedData[0] : null
+  })
+  const [episodes, setEpisodes] = useState(() => {
+    const storedData = getFromLocalStorage(podcastId)
+    return storedData ? storedData.slice(1) : []
+  })
   const [loading, setLoading] = useState(false)
-  const { state: { description } } = useLocation()
+  const location = useLocation()
+  const description = location.state?.description
 
   const PODCAST_END_POINT = `https://itunes.apple.com/lookup?id=${podcastId}&media=podcast&entity=podcastEpisode&limit=20`
   const ALL_ORIGIN = 'https://api.allorigins.win/get?url=' + encodeURIComponent(PODCAST_END_POINT)
@@ -28,7 +35,7 @@ export const PodcastDetail = () => {
         const jsonData = JSON.parse(data.contents)
 
         if (jsonData?.results?.length > 0) {
-          saveToLocalStorage(podcastId, jsonData.results[0])
+          saveToLocalStorage(podcastId, jsonData.results)
           setPodcast(jsonData.results[0])
           setEpisodes(jsonData.results.slice(1))
         }
@@ -54,7 +61,7 @@ export const PodcastDetail = () => {
     }, 86400000)
 
     return () => clearInterval(intervalId)
-  }, [ALL_ORIGIN, podcast, podcastId])
+  }, [podcastId])
 
   return (
     loading
